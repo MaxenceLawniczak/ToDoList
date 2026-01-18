@@ -2,31 +2,31 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Task Manager | Maxence</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Kanban | Portfolio</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="project-dashboard">
+<body>
 
     <nav class="navbar">
-        <div id="projectTabs" class="tabs-container">
-            </div>
+        <div id="projectTabs" class="tabs-container"></div>
         <div class="add-project-box">
             <input type="text" id="newProjectInput" placeholder="Nouveau projet...">
             <button onclick="addProject()" class="btn-add">+</button>
         </div>
     </nav>
 
-    <div class="action-bar">
-        <div class="input-group">
-            <input type="text" id="taskInput" placeholder="Nouvelle tâche...">
-            <button onclick="addTask()" class="btn-primary">Ajouter</button>
-        </div>
-    </div>
-
     <div class="mobile-col-selector">
         <button onclick="switchCol('todo')" class="col-btn active" id="btn-todo">À Faire</button>
         <button onclick="switchCol('doing')" class="col-btn" id="btn-doing">En Cours</button>
         <button onclick="switchCol('done')" class="col-btn" id="btn-done">Terminé</button>
+    </div>
+
+    <div class="action-bar">
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Ajouter une tâche...">
+            <button onclick="addTask()" class="btn-primary">Ajouter</button>
+        </div>
     </div>
 
     <main class="kanban-grid">

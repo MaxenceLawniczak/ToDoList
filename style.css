@@ -28,7 +28,56 @@ body {
 }
 .tab.active { border-color: var(--accent); color: var(--accent); background: rgba(59, 130, 246, 0.1); }
 
-/* Grid & Cards */
+/* Titres des colonnes avec indicateurs de couleur */
+.column-title {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Couleurs spécifiques par statut */
+.column-title.todo { 
+    color: #fbbf24; /* Jaune/Ambre */
+    border-bottom-color: rgba(251, 191, 36, 0.3);
+}
+
+.column-title.doing { 
+    color: #3b82f6; /* Bleu */
+    border-bottom-color: rgba(59, 130, 246, 0.3);
+}
+
+.column-title.done { 
+    color: #22c55e; /* Vert */
+    border-bottom-color: rgba(34, 197, 94, 0.3);
+}
+
+/* Optionnel : un petit point coloré avant le titre */
+.column-title::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.task-list {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 100px;
+    padding-right: 5px;
+}
+
+/* Barre de défilement discrète pour les colonnes */
+.task-list::-webkit-scrollbar { width: 4px; }
+.task-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
 .kanban-grid {
     display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 20px; padding: 0 20px 20px; flex: 1; overflow: hidden;
