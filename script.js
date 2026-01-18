@@ -16,37 +16,31 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const dbRef = ref(db, 'kanbanData');
 
-// On ne définit pas de valeurs par défaut ici, on laisse Firebase remplir
 let projects = [];
 let tasks = [];
 let currentProject = localStorage.getItem('last_project') || 'Général';
+let isSyncedOnce = false; 
 
-// --- SYNC & CLOUD ---
+// --- CLOUD SYNC ---
 
 onValue(dbRef, (snapshot) => {
     const data = snapshot.val();
     if (data) {
         tasks = data.tasks || [];
         projects = data.projects || ['Général'];
-        
-        // Si le projet courant n'existe plus dans la liste cloud, on reset
-        if (!projects.includes(currentProject)) {
-            currentProject = projects[0];
-        }
+        if (!projects.includes(currentProject)) currentProject = projects[0];
     } else {
-        // Premier lancement : on initialise le cloud
         projects = ['Général'];
         tasks = [];
         syncWithCloud();
     }
+    isSyncedOnce = true;
     render(); 
 });
 
 function syncWithCloud() {
-    set(dbRef, {
-        tasks: tasks,
-        projects: projects
-    });
+    if (!isSyncedOnce) return; // Empêche d'écraser le cloud avec du vide au chargement
+    set(dbRef, { tasks, projects });
 }
 
 // --- LOGIQUE METIER ---
@@ -71,8 +65,7 @@ window.switchProject = (name) => {
 
 window.deleteProject = (name, event) => {
     event.stopPropagation();
-    if (projects.length === 1) return alert("Impossible de supprimer le dernier projet.");
-    
+    if (projects.length === 1) return;
     if(confirm(`Supprimer le projet "${name}" ?`)) {
         projects = projects.filter(p => p !== name);
         tasks = tasks.filter(t => t.project !== name);
@@ -105,62 +98,42 @@ window.deleteTask = (id) => {
     syncWithCloud();
 };
 
-// --- AFFICHAGE ---
+// --- RENDER ---
 
 function render() {
     const tabsCont = document.getElementById('projectTabs');
-    const containers = {
-        todo: document.getElementById('todo'),
-        doing: document.getElementById('doing'),
-        done: document.getElementById('done')
-    };
+    const containers = { todo: document.getElementById('todo'), doing: document.getElementById('doing'), done: document.getElementById('done') };
     
     if (!tabsCont || !containers.todo) return;
 
-    // Rendre les onglets
     tabsCont.innerHTML = projects.map(p => `
         <div class="tab ${p === currentProject ? 'active' : ''}" onclick="switchProject('${p}')">
-            ${p}
-            <span class="btn-delete-tab" onclick="deleteProject('${p}', event)">×</span>
+            ${p} <span class="btn-delete-tab" onclick="deleteProject('${p}', event)">×</span>
         </div>
     `).join('');
 
-    // Vider les colonnes
     Object.values(containers).forEach(c => c.innerHTML = "");
 
-    // Filtrer et afficher
-    const projectTasks = tasks.filter(t => t.project === currentProject);
-    
-    projectTasks.forEach(t => {
+    tasks.filter(t => t.project === currentProject).forEach(t => {
         const card = document.createElement('div');
-        card.className = "task-card shadow-sm"; // Ajout d'une ombre pour le style
+        card.className = "task-card";
         
-        let moveBtns = "";
-        if (t.status === 'todo') moveBtns = `<button onclick="moveTask(${t.id}, 'doing')">➡️</button>`;
-        else if (t.status === 'doing') moveBtns = `<button onclick="moveTask(${t.id}, 'todo')">⬅️</button> <button onclick="moveTask(${t.id}, 'done')">✅</button>`;
-        else if (t.status === 'done') moveBtns = `<button onclick="moveTask(${t.id}, 'doing')">⬅️</button>`;
+        let btns = "";
+        if (t.status === 'todo') btns = `<button onclick="moveTask(${t.id}, 'doing')">➡️</button>`;
+        else if (t.status === 'doing') btns = `<button onclick="moveTask(${t.id}, 'todo')">⬅️</button> <button onclick="moveTask(${t.id}, 'done')">✅</button>`;
+        else if (t.status === 'done') btns = `<button onclick="moveTask(${t.id}, 'doing')">⬅️</button>`;
 
-        card.innerHTML = `
-            <span>${t.title}</span>
-            <div class="task-actions">
-                ${moveBtns}
-                <button onclick="deleteTask(${t.id})" style="color: #ff4d4d; margin-left: 10px;">🗑️</button>
-            </div>
-        `;
+        card.innerHTML = `<span>${t.title}</span><div class="task-actions">${btns}<button onclick="deleteTask(${t.id})">🗑️</button></div>`;
         containers[t.status].appendChild(card);
     });
 }
 
-// --- RESPONSIVE ---
-
-window.switchCol = (colId) => {
-    document.querySelectorAll('.column').forEach(col => col.classList.remove('active'));
-    const targetCol = document.getElementById('col-' + colId);
-    if(targetCol) targetCol.classList.add('active');
-
-    document.querySelectorAll('.col-btn').forEach(btn => btn.classList.remove('active'));
-    const targetBtn = document.getElementById('btn-' + colId);
-    if(targetBtn) targetBtn.classList.add('active');
+// --- MOBILE ---
+window.switchCol = (id) => {
+    document.querySelectorAll('.column').forEach(c => c.classList.remove('active'));
+    document.getElementById('col-' + id).classList.add('active');
+    document.querySelectorAll('.col-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + id).classList.add('active');
 };
 
 document.addEventListener('DOMContentLoaded', () => {

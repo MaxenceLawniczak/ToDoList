@@ -1,212 +1,57 @@
-/* Variables de couleur inspirées de ton portfolio */
 :root {
     --bg-dark: #0f172a;
     --bg-card: #1e293b;
-    --bg-input: #0f172a;
     --text-main: #f1f5f9;
     --text-dim: #94a3b8;
-    --accent: #3b82f6; /* Bleu par défaut */
+    --accent: #3b82f6;
     --border: #334155;
 }
 
 body {
-    margin: 0;
-    font-family: 'Segoe UI', Roboto, sans-serif;
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+    margin: 0; font-family: 'Inter', sans-serif;
+    background: var(--bg-dark); color: var(--text-main);
+    display: flex; flex-direction: column; height: 100vh; overflow: hidden;
 }
 
-/* NAVBAR ET ONGLETS */
+/* Navbar */
 .navbar {
-    display: flex;
-    align-items: center;
-    background-color: #1e293b;
-    padding: 10px 20px;
-    border-bottom: 1px solid var(--border);
-    gap: 20px;
+    display: flex; align-items: center; background: #1e293b;
+    padding: 10px 20px; border-bottom: 1px solid var(--border); gap: 15px;
 }
-
-.tabs-container {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-}
+.tabs-container { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.tabs-container::-webkit-scrollbar { display: none; }
 
 .tab {
-    background: var(--bg-dark);
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    font-size: 14px;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    background: var(--bg-dark); padding: 8px 14px; border-radius: 6px;
+    border: 1px solid var(--border); cursor: pointer; font-size: 13px;
+    display: flex; align-items: center; gap: 8px; white-space: nowrap;
 }
+.tab.active { border-color: var(--accent); color: var(--accent); background: rgba(59, 130, 246, 0.1); }
 
-.tab.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(59, 130, 246, 0.1);
-}
-
-.btn-delete-tab {
-    color: var(--text-dim);
-    font-size: 18px;
-}
-
-.btn-delete-tab:hover { color: #ef4444; }
-
-/* INPUTS ET BOUTONS */
-.action-bar { padding: 30px; display: flex; justify-content: center; }
-
-.input-group {
-    display: flex;
-    width: 100%;
-    max-width: 500px;
-    background: var(--bg-card);
-    padding: 5px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-}
-
-input {
-    background: transparent;
-    border: none;
-    color: white;
-    padding: 10px;
-    flex: 1;
-    outline: none;
-}
-
-.btn-primary {
-    background: var(--accent);
-    border: none;
-    color: white;
-    padding: 8px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-/* KANBAN GRID */
+/* Grid & Cards */
 .kanban-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    padding: 0 30px 30px 30px;
-    flex: 1;
-    overflow: hidden;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px; padding: 0 20px 20px; flex: 1; overflow: hidden;
 }
+.column { background: rgba(30, 41, 59, 0.3); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; border: 1px solid var(--border); }
+.task-card { background: var(--bg-card); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-.column {
-    background: rgba(30, 41, 59, 0.5);
-    border-radius: 12px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--border);
-}
-
-.column-title {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--border);
-}
-
-.column-title.todo { color: #fb7185; border-color: #fb7185; }
-.column-title.doing { color: #fbbf24; border-color: #fbbf24; }
-.column-title.done { color: #34d399; border-color: #34d399; }
-
-/* CARTES DE TÂCHES */
-.task-card {
-    background: var(--bg-card);
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.task-card:hover { border-color: var(--text-dim); }
-
-.task-actions button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    color: var(--text-dim);
-}
-
-/* --- RESPONSIVE BOOSTÉ --- */
-
-/* Par défaut : on cache le sélecteur mobile */
+/* Responsive Boosté */
 .mobile-col-selector { display: none; }
 
 @media (max-width: 768px) {
-    body { overflow: hidden; height: 100vh; }
-
-    /* Navbar : défilement horizontal fluide pour les projets */
-    .tabs-container {
-        padding-bottom: 5px;
-        mask-image: linear-gradient(to right, black 85%, transparent 100%);
-    }
-
-    /* Barre d'action plus compacte */
-    .action-bar { padding: 15px; }
-
-    /* LE SÉLECTEUR MOBILE */
-    .mobile-col-selector {
-        display: flex;
-        background: var(--bg-card);
-        margin: 0 15px 15px 15px;
-        border-radius: 8px;
-        padding: 4px;
-        border: 1px solid var(--border);
-    }
-
-    .col-btn {
-        flex: 1;
-        padding: 8px;
-        border: none;
-        background: transparent;
-        color: var(--text-dim);
-        font-size: 12px;
-        font-weight: bold;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-
-    .col-btn.active {
-        background: var(--accent);
-        color: white;
-    }
-
-    /* GRID : On affiche une seule colonne à la fois */
-    .kanban-grid {
-        display: block; /* On sort du mode grid */
-        position: relative;
-        padding: 0 15px;
-    }
-
-    .column {
-        display: none; /* On cache tout par défaut */
-        height: calc(100vh - 250px);
-        border: none;
-        background: transparent;
-    }
-
-    /* Seule la colonne active est visible */
-    .column.active {
-        display: flex;
-    }
-
-    .column-title { display: none; } /* Inutile avec le sélecteur d'onglets */
+    .kanban-grid { display: block; position: relative; }
+    .column { display: none; height: 70vh; }
+    .column.active { display: flex; }
+    .mobile-col-selector { display: flex; padding: 10px 20px; gap: 5px; }
+    .col-btn { flex: 1; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-dim); padding: 10px; border-radius: 6px; }
+    .col-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .navbar { flex-wrap: wrap; }
 }
+
+/* Buttons & Inputs */
+.btn-primary { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+.action-bar { padding: 20px; display: flex; justify-content: center; }
+.input-group { background: var(--bg-card); border: 1px solid var(--border); padding: 5px; border-radius: 10px; display: flex; width: 100%; max-width: 500px; }
+input { background: transparent; border: none; color: white; padding: 8px; flex: 1; outline: none; }
