@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Manager | Maxence</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="project-dashboard">
+
+    <nav class="navbar">
+        <div id="projectTabs" class="tabs-container">
+            </div>
+        <div class="add-project-box">
+            <input type="text" id="newProjectInput" placeholder="Nouveau projet...">
+            <button onclick="addProject()" class="btn-add">+</button>
+        </div>
+    </nav>
+
+    <div class="action-bar">
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Nouvelle tâche...">
+            <button onclick="addTask()" class="btn-primary">Ajouter</button>
+        </div>
+    </div>
+
+    <div class="mobile-col-selector">
+        <button onclick="switchCol('todo')" class="col-btn active" id="btn-todo">À Faire</button>
+        <button onclick="switchCol('doing')" class="col-btn" id="btn-doing">En Cours</button>
+        <button onclick="switchCol('done')" class="col-btn" id="btn-done">Terminé</button>
+    </div>
+
+    <main class="kanban-grid">
+        <section class="column" id="col-todo">
+            <h2 class="column-title todo">À FAIRE</h2>
+            <div id="todo" class="task-list"></div>
+        </section>
+        
+        <section class="column" id="col-doing">
+            <h2 class="column-title doing">EN COURS</h2>
+            <div id="doing" class="task-list"></div>
+        </section>
+        
+        <section class="column" id="col-done">
+            <h2 class="column-title done">TERMINÉ</h2>
+            <div id="done" class="task-list"></div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
